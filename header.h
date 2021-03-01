@@ -1,3 +1,5 @@
 #pragma once
 
-enum class MouseState { Cursor, AddPoint };
+#include <QDebug>
+
+enum class MouseState { Cursor, AddPoint, Move };

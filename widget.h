@@ -3,6 +3,7 @@
 #include <QWidget>
 
 #include "Widget/sidebar.h"
+#include "Widget/viewport.h"
 
 class Widget : public QWidget
 {
@@ -13,5 +14,6 @@ public:
     ~Widget();
 
 private:
-    SideBar *sideBar = new SideBar;
+    SideBar *mSideBar = new SideBar;
+    Viewport *mViewport = new Viewport;
 };

@@ -2,11 +2,16 @@
 
 SideBar::SideBar(QWidget *parent) : QWidget(parent)
 {
-    rbtCursor->setChecked(true);
+    mRbtCursor->setChecked(true);
+
+    connect(mRbtCursor, &QRadioButton::clicked, [this](bool checked) { if(checked) emit mouseStateChanged(MouseState::Cursor); });
+    connect(mRbtAddPoint, &QRadioButton::clicked, [this](bool checked) { if(checked) emit mouseStateChanged(MouseState::AddPoint); });
+    connect(mRbtMove, &QRadioButton::clicked, [this](bool checked){ if(checked) emit mouseStateChanged(MouseState::Move); });
 
     QVBoxLayout *layRbt = new QVBoxLayout;
-    layRbt->addWidget(rbtCursor);
-    layRbt->addWidget(rbtAddPoint);
+    layRbt->addWidget(mRbtCursor);
+    layRbt->addWidget(mRbtAddPoint);
+    layRbt->addWidget(mRbtMove);
 
     QVBoxLayout *layMain = new QVBoxLayout;
     layMain->addLayout(layRbt);

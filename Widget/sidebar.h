@@ -20,7 +20,8 @@ signals:
     void mouseStateChanged(MouseState ms);
 
 private:
-    QRadioButton *rbtCursor = new QRadioButton("鼠标");
-    QRadioButton *rbtAddPoint = new QRadioButton("添加顶点");
+    QRadioButton *mRbtCursor = new QRadioButton("鼠标");
+    QRadioButton *mRbtAddPoint = new QRadioButton("添加顶点");
+    QRadioButton *mRbtMove = new QRadioButton("移动");
 };
 
