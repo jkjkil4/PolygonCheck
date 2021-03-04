@@ -2,4 +2,4 @@
 
 #include <QDebug>
 
-enum class MouseState { Cursor, AddPoint, Move };
+enum class MouseState { Cursor, AddPoint, Move, SetPos };

@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 
 #include "header.h"
+#include <Lib/paint.h>
 
 class Viewport : public QWidget
 {
@@ -22,8 +23,17 @@ public:
 
     void startTimer(QTimer *pTimer, int msec);
 
+    QVector<double> getIntersections(double y);
+
+signals:
+    void xChanged(int x);
+    void yChanged(int y);
+
 public slots:
     void onMouseStateChanged(MouseState ms);
+    void onXChanged(int x);
+    void onYChanged(int y);
+    void onVertexPosVisibleChanged(bool visible);
 
 private:
     MouseState mMouseState = MouseState::Cursor;
@@ -31,6 +41,10 @@ private:
 
     QPoint mPrevPos;
     QPoint mOffset;
+    QPoint mCheckPos = QPoint(0, 0);
+    QVector<double> vecIntersections;
+
+    bool isVertexPosVisible = false;
 
     QTimer *mTimerLimitUpdate = new QTimer(this);
 };
