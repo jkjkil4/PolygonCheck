@@ -34,15 +34,16 @@ public slots:
     void onXChanged(int x);
     void onYChanged(int y);
     void onVertexPosVisibleChanged(bool visible);
+    void onClearVertex();
 
 private:
     MouseState mMouseState = MouseState::Cursor;
-    QVector<QPointF> vecPoints;
+    QVector<QPointF> mVecPoints;
 
     QPoint mPrevPos;
     QPoint mOffset;
     QPoint mCheckPos = QPoint(0, 0);
-    QVector<double> vecIntersections;
+    QVector<double> mVecIntersections;
 
     bool isVertexPosVisible = false;
 

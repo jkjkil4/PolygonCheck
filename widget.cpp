@@ -9,6 +9,7 @@ Widget::Widget(QWidget *parent)
     connect(mViewport, SIGNAL(xChanged(int)), mSideBar, SLOT(onXChanged(int)));
     connect(mViewport, SIGNAL(yChanged(int)), mSideBar, SLOT(onYChanged(int)));
     connect(mSideBar, SIGNAL(vertexPosVisibleChanged(bool)), mViewport, SLOT(onVertexPosVisibleChanged(bool)));
+    connect(mSideBar, SIGNAL(clearVertex()), mViewport, SLOT(onClearVertex()));
 
 
     QHBoxLayout *layMain = new QHBoxLayout;

@@ -4,6 +4,7 @@
 #include <QRadioButton>
 #include <QLabel>
 #include <QCheckBox>
+#include <QPushButton>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -24,6 +25,7 @@ signals:
     void xChanged(int x);
     void yChanged(int y);
     void vertexPosVisibleChanged(bool visible);
+    void clearVertex();
 
 public slots:
     void onXChanged(int x);
@@ -41,5 +43,7 @@ private:
     QRegularExpressionValidator *mRegExpVal = new QRegularExpressionValidator(mRegExp, this);
 
     QCheckBox *mCbbVertexPosVisible = new QCheckBox("显示顶点坐标");
+
+    QPushButton *mBtnClearVertex = new QPushButton("清除顶点");
 };
 

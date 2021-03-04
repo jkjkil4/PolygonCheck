@@ -11,8 +11,8 @@ Viewport::Viewport()
 void Viewport::mousePressEvent(QMouseEvent *ev) {
     switch(mMouseState) {
     case MouseState::AddPoint:
-        vecPoints << ev->pos() - mOffset;
-        vecIntersections = getIntersections(mCheckPos.y());
+        mVecPoints << ev->pos() - mOffset;
+        mVecIntersections = getIntersections(mCheckPos.y());
         startTimer(mTimerLimitUpdate, 16);
         break;
     case MouseState::Move:
@@ -27,7 +27,7 @@ void Viewport::mousePressEvent(QMouseEvent *ev) {
             mCheckPos = pos;
             if(isXChanged) emit xChanged(pos.x());
             if(isYChanged) {
-                vecIntersections = getIntersections(pos.y());
+                mVecIntersections = getIntersections(pos.y());
                 emit yChanged(pos.y());
             }
             startTimer(mTimerLimitUpdate, 16);
@@ -65,11 +65,11 @@ void Viewport::paintEvent(QPaintEvent *) {
     p.setRenderHint(QPainter::RenderHint::Antialiasing);
 
     //绘制检测线
-    if(vecIntersections.size() > 1) {
+    if(mVecIntersections.size() > 1) {
         bool isIn = true;
-        double prev = vecIntersections[0];
-        for(int i = 1; i < vecIntersections.size(); i++) {
-            double cur = vecIntersections[i];
+        double prev = mVecIntersections[0];
+        for(int i = 1; i < mVecIntersections.size(); i++) {
+            double cur = mVecIntersections[i];
 
             p.fillRect((int)prev + mOffset.x(), mCheckPos.y() + mOffset.y(), (int)cur - (int)prev, 2, isIn ? Qt::green : Qt::red);
 
@@ -78,28 +78,28 @@ void Viewport::paintEvent(QPaintEvent *) {
         }
     }
 
-    if(!vecPoints.isEmpty()) {
+    if(!mVecPoints.isEmpty()) {
         //绘制多边形
         p.setPen(QPen(Qt::black, 2));
-        if(vecPoints.size() == 1)
-            p.drawPoint(vecPoints[0] + mOffset);
+        if(mVecPoints.size() == 1)
+            p.drawPoint(mVecPoints[0] + mOffset);
         else {
-            QPointF prev = vecPoints[0];
-            for(int i = 1; i < vecPoints.size(); i++) {
-                QPointF cur = vecPoints[i];
+            QPointF prev = mVecPoints[0];
+            for(int i = 1; i < mVecPoints.size(); i++) {
+                QPointF cur = mVecPoints[i];
                 p.drawLine(prev + mOffset, cur + mOffset);
                 prev = cur;
             }
 
             if(mMouseState == MouseState::AddPoint)
                 p.setPen(QPen(QColor(160, 160, 250), 2));
-            p.drawLine(*vecPoints.begin() + mOffset, *vecPoints.rbegin() + mOffset);
+            p.drawLine(*mVecPoints.begin() + mOffset, *mVecPoints.rbegin() + mOffset);
         }
 
         //绘制顶点坐标
         if(isVertexPosVisible) {
             p.setPen(Qt::black);
-            for(QPointF &pos : vecPoints) {
+            for(QPointF &pos : mVecPoints) {
                 QString text = "(" + QString::number(pos.x()) + ", " + QString::number(pos.y()) + ")";
                 j::DrawText(&p, (int)pos.x() + mOffset.x() + 3, (int)pos.y() + mOffset.y() + 3, Qt::AlignLeft | Qt::AlignTop, text);
             }
@@ -118,11 +118,11 @@ QVector<double> Viewport::getIntersections(double y) {
 
 #else
     QVector<double> vecIntersections;
-    if(vecPoints.size() < 2)
+    if(mVecPoints.size() < 2)
         return vecIntersections;
 
-    QPointF prev = *vecPoints.rbegin();
-    for(const QPointF &cur : vecPoints) {
+    QPointF prev = *mVecPoints.rbegin();
+    for(const QPointF &cur : mVecPoints) {
         if(prev.y() != cur.y() && y >= qMin(prev.y(), cur.y()) && y <= qMax(prev.y(), cur.y())) {
             vecIntersections << prev.x() + (cur.x() - prev.x()) * (y - prev.y()) / (cur.y() - prev.y());
         }
@@ -164,12 +164,18 @@ void Viewport::onXChanged(int x) {
 void Viewport::onYChanged(int y) {
     if(y != mCheckPos.y()) {
         mCheckPos.setY(y);
-        vecIntersections = getIntersections(y);
+        mVecIntersections = getIntersections(y);
         startTimer(mTimerLimitUpdate, 16);
     }
 }
 
 void Viewport::onVertexPosVisibleChanged(bool visible) {
     isVertexPosVisible = visible;
+    startTimer(mTimerLimitUpdate, 16);
+}
+
+void Viewport::onClearVertex() {
+    mVecPoints.clear();
+    mVecIntersections.clear();
     startTimer(mTimerLimitUpdate, 16);
 }

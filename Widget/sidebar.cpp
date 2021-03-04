@@ -12,6 +12,7 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
     connect(mEditX, &QLineEdit::textChanged, [this](const QString &text){ emit xChanged(text.toInt()); });
     connect(mEditY, &QLineEdit::textChanged, [this](const QString &text){ emit yChanged(text.toInt()); });
     connect(mCbbVertexPosVisible, &QCheckBox::stateChanged, [this](int state){ emit vertexPosVisibleChanged(state); });
+    connect(mBtnClearVertex, &QPushButton::clicked, [this](){ emit clearVertex(); });
 
     QVBoxLayout *layRbt = new QVBoxLayout;
     layRbt->addWidget(mRbtCursor);
@@ -30,11 +31,15 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
     QVBoxLayout *layCbb = new QVBoxLayout;
     layCbb->addWidget(mCbbVertexPosVisible);
 
+    QVBoxLayout *layBtn = new QVBoxLayout;
+    layBtn->addWidget(mBtnClearVertex);
+
     QVBoxLayout *layMain = new QVBoxLayout;
     layMain->addLayout(layRbt);
     layMain->addLayout(layEditX);
     layMain->addLayout(layEditY);
     layMain->addLayout(layCbb);
+    layMain->addLayout(layBtn);
     layMain->addStretch();
 
     setLayout(layMain);
