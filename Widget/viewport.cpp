@@ -144,13 +144,15 @@ QVector<double> Viewport::getIntersections(double y) {
     if(isAllHor)
         return vecIntersections;
 
-    //从末尾开始遍历得到第一个不为水平的线的走向
+    //从末尾开始遍历得到第一个不为水平的线的 走向 和 交点情况
     bool prevTrend = false;
+    bool prevHasIntersection = false;
     QPointF prev = *mVecPoints.rbegin();
     for(auto iter = mVecPoints.rbegin() + 1; iter != mVecPoints.rend(); ++iter) {
         const QPointF &cur = *iter;
         if(prev.y() != cur.y()) {
             prevTrend = cur.y() < prev.y(); //因为是反向遍历，所以是小于（和后面的大于相反）
+            prevHasIntersection = (y >= qMin(prev.y(), cur.y()) && y <= qMax(prev.y(), cur.y()));
             break;
         }
         prev = cur;
@@ -158,7 +160,6 @@ QVector<double> Viewport::getIntersections(double y) {
 
     //计算交点
     prev = *mVecPoints.rbegin();
-    bool prevHasIntersection = false;
     for(const QPointF &cur : mVecPoints) {
         bool hasIntersection = false;
         if(prev.y() != cur.y()) {
