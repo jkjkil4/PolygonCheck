@@ -14,19 +14,29 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
     connect(mCbbVertexPosVisible, &QCheckBox::stateChanged, [this](int state){ emit vertexPosVisibleChanged(state); });
     connect(mBtnClearVertex, &QPushButton::clicked, [this](){ emit clearVertex(); });
 
-    QVBoxLayout *layRbt = new QVBoxLayout;
-    layRbt->addWidget(mRbtCursor);
-    layRbt->addWidget(mRbtAddPoint);
-    layRbt->addWidget(mRbtMove);
-    layRbt->addWidget(mRbtSetPos);
+    {
+        QVBoxLayout *layRbt = new QVBoxLayout;
+        layRbt->addWidget(mRbtCursor);
+        layRbt->addWidget(mRbtAddPoint);
+        layRbt->addWidget(mRbtMove);
+        layRbt->addWidget(mRbtSetPos);
+        mRbtGroup->setLayout(layRbt);
+    }
 
-    QHBoxLayout *layEditX = new QHBoxLayout;
-    layEditX->addWidget(new QLabel("x:"));
-    layEditX->addWidget(mEditX);
+    {
+        QHBoxLayout *layEditX = new QHBoxLayout;
+        layEditX->addWidget(new QLabel("x:"));
+        layEditX->addWidget(mEditX);
 
-    QHBoxLayout *layEditY = new QHBoxLayout;
-    layEditY->addWidget(new QLabel("y:"));
-    layEditY->addWidget(mEditY);
+        QHBoxLayout *layEditY = new QHBoxLayout;
+        layEditY->addWidget(new QLabel("y:"));
+        layEditY->addWidget(mEditY);
+
+        QVBoxLayout *lay = new QVBoxLayout;
+        lay->addLayout(layEditX);
+        lay->addLayout(layEditY);
+        mEditGroup->setLayout(lay);
+    }
 
     QVBoxLayout *layCbb = new QVBoxLayout;
     layCbb->addWidget(mCbbVertexPosVisible);
@@ -35,9 +45,8 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
     layBtn->addWidget(mBtnClearVertex);
 
     QVBoxLayout *layMain = new QVBoxLayout;
-    layMain->addLayout(layRbt);
-    layMain->addLayout(layEditX);
-    layMain->addLayout(layEditY);
+    layMain->addWidget(mRbtGroup);
+    layMain->addWidget(mEditGroup);
     layMain->addLayout(layCbb);
     layMain->addLayout(layBtn);
     layMain->addStretch();
@@ -47,7 +56,7 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
     j::LimitWidth(this, width());
 
     QPalette pal = palette();
-    pal.setColor(QPalette::Window, QColor(220, 220, 220));
+    pal.setColor(QPalette::Window, QColor(240, 240, 240));
     setPalette(pal);
     setAutoFillBackground(true);
 }

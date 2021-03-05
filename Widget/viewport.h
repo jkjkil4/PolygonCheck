@@ -23,6 +23,7 @@ public:
 
     void startTimer(QTimer *pTimer, int msec);
 
+    void setPosByMouse(QPoint pos);
     QVector<double> getIntersections(double y);
 
 signals:
