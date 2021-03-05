@@ -105,11 +105,16 @@ void Viewport::paintEvent(QPaintEvent *) {
         }
     }
 
+    //绘制检测点
+    p.setPen(QPen(isCheckPosInside() ? QColor(0, 190, 0) : QColor(190, 0, 0), 4));
+    p.drawLine(mCheckPos + QPoint(-4, -4), mCheckPos + QPoint(4, 4));
+    p.drawLine(mCheckPos + QPoint(4, -4), mCheckPos + QPoint(-4, 4));
+
     //绘制鼠标位置
     if(mMouseState == MouseState::AddPoint || mMouseState == MouseState::SetPos) {
         QPoint pos = mapFromGlobal(cursor().pos());
         if(QRect(0, 0, width(), height()).contains(pos)) {
-            QString text = "(" + QString::number(pos.x()) + ", " + QString::number(pos.y()) + ")";
+            QString text = "(" + QString::number(pos.x() - mOffset.x()) + ", " + QString::number(pos.y() - mOffset.y()) + ")";
             p.setPen(Qt::blue);
             j::DrawText(&p, pos + QPoint(2, 2), Qt::AlignLeft | Qt::AlignTop, text);
         }
@@ -211,6 +216,20 @@ QVector<double> Viewport::getIntersections(double y) {
 #endif
 }
 
+bool Viewport::isCheckPosInside() {
+    if(mVecPoints.isEmpty())
+        return false;
+
+    int checkX = mCheckPos.x();
+    bool isInside = false;
+    for(double x : mVecIntersections) {
+        if(x > checkX)
+            return isInside;
+        isInside = !isInside;
+    }
+    return false;
+}
+
 void Viewport::onMouseStateChanged(MouseState ms) {
     mMouseState = ms;
     switch(mMouseState) {
@@ -224,7 +243,7 @@ void Viewport::onMouseStateChanged(MouseState ms) {
         setCursor(Qt::SizeAllCursor);
         break;
     case MouseState::SetPos:
-        setCursor(Qt::CrossCursor);
+        setCursor(Qt::ArrowCursor);
         break;
     }
     startTimer(mTimerLimitUpdate, 16);

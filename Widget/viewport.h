@@ -26,6 +26,8 @@ public:
     void setPosByMouse(QPoint pos);
     QVector<double> getIntersections(double y);
 
+    bool isCheckPosInside();
+
 signals:
     void xChanged(int x);
     void yChanged(int y);
