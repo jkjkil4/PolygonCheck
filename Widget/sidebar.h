@@ -9,8 +9,8 @@
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QLineEdit>
-#include <QRegularExpressionValidator>
+
+#include "digitedit.h"
 
 #include <Lib/header.h>
 #include "header.h"
@@ -40,10 +40,8 @@ private:
     QRadioButton *mRbtSetPos = new QRadioButton("设置检测位置");
 
     QGroupBox *mEditGroup = new QGroupBox("检测位置");
-    QLineEdit *mEditX = new QLineEdit("0");
-    QLineEdit *mEditY = new QLineEdit("0");
-    QRegularExpression mRegExp = QRegularExpression("[0-9]*");
-    QRegularExpressionValidator *mRegExpVal = new QRegularExpressionValidator(mRegExp, this);
+    DigitEdit *mEditX = new DigitEdit("0");
+    DigitEdit *mEditY = new DigitEdit("0");
 
     QCheckBox *mCbbVertexPosVisible = new QCheckBox("显示顶点坐标");
 

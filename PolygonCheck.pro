@@ -25,12 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        Widget/digitedit.cpp \
         Widget/sidebar.cpp \
         Widget/viewport.cpp \
         main.cpp \
         widget.cpp
 
 HEADERS += \
+        Widget/digitedit.h \
         Widget/sidebar.h \
         Widget/viewport.h \
         header.h \

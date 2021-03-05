@@ -3,7 +3,6 @@
 SideBar::SideBar(QWidget *parent) : QWidget(parent)
 {
     mRbtCursor->setChecked(true);
-    mEditY->setValidator(mRegExpVal);
 
     connect(mRbtCursor, &QRadioButton::clicked, [this](bool checked) { if(checked) emit mouseStateChanged(MouseState::Cursor); });
     connect(mRbtAddPoint, &QRadioButton::clicked, [this](bool checked) { if(checked) emit mouseStateChanged(MouseState::AddPoint); });
