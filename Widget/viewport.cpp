@@ -107,8 +107,9 @@ void Viewport::paintEvent(QPaintEvent *) {
 
     //绘制检测点
     p.setPen(QPen(isCheckPosInside() ? QColor(0, 190, 0) : QColor(190, 0, 0), 4));
-    p.drawLine(mCheckPos + QPoint(-4, -4), mCheckPos + QPoint(4, 4));
-    p.drawLine(mCheckPos + QPoint(4, -4), mCheckPos + QPoint(-4, 4));
+    QPoint offsetedCheckPos = mCheckPos + mOffset;
+    p.drawLine(offsetedCheckPos + QPoint(-4, -4), offsetedCheckPos + QPoint(4, 4));
+    p.drawLine(offsetedCheckPos + QPoint(4, -4), offsetedCheckPos + QPoint(-4, 4));
 
     //绘制鼠标位置
     if(mMouseState == MouseState::AddPoint || mMouseState == MouseState::SetPos) {
