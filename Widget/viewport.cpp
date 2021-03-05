@@ -48,13 +48,14 @@ void Viewport::mouseMoveEvent(QMouseEvent *ev) {
     case MouseState::SetPos:
         if(ev->buttons() & Qt::LeftButton)
             setPosByMouse(ev->pos());
+        startTimer(mTimerLimitUpdate, 16);
         break;
     default:;
     }
 }
 
 void Viewport::leaveEvent(QEvent *) {
-    if(mMouseState == MouseState::AddPoint)
+    if(mMouseState == MouseState::AddPoint || mMouseState == MouseState::SetPos)
         startTimer(mTimerLimitUpdate, 16);
 }
 
@@ -69,7 +70,7 @@ void Viewport::paintEvent(QPaintEvent *) {
         for(int i = 1; i < mVecIntersections.size(); i++) {
             double cur = mVecIntersections[i];
 
-            p.fillRect((int)prev + mOffset.x(), mCheckPos.y() + mOffset.y(), (int)cur - (int)prev, 2, isIn ? Qt::green : Qt::red);
+            p.fillRect(QRectF(prev + mOffset.x(), mCheckPos.y() + mOffset.y(), cur - prev, 2), isIn ? Qt::green : Qt::red);
 
             isIn = !isIn;
             prev = cur;
@@ -101,6 +102,16 @@ void Viewport::paintEvent(QPaintEvent *) {
                 QString text = "(" + QString::number(pos.x()) + ", " + QString::number(pos.y()) + ")";
                 j::DrawText(&p, (int)pos.x() + mOffset.x() + 1, (int)pos.y() + mOffset.y() + 1, Qt::AlignLeft | Qt::AlignTop, text);
             }
+        }
+    }
+
+    //绘制鼠标位置
+    if(mMouseState == MouseState::AddPoint || mMouseState == MouseState::SetPos) {
+        QPoint pos = mapFromGlobal(cursor().pos());
+        if(QRect(0, 0, width(), height()).contains(pos)) {
+            QString text = "(" + QString::number(pos.x()) + ", " + QString::number(pos.y()) + ")";
+            p.setPen(Qt::blue);
+            j::DrawText(&p, pos + QPoint(2, 2), Qt::AlignLeft | Qt::AlignTop, text);
         }
     }
 }
