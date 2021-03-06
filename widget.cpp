@@ -3,26 +3,30 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-    connect(mSideBar, SIGNAL(mouseStateChanged(MouseState)), mViewport, SLOT(onMouseStateChanged(MouseState)));
-    connect(mSideBar, SIGNAL(xChanged(int)), mViewport, SLOT(onXChanged(int)));
-    connect(mSideBar, SIGNAL(yChanged(int)), mViewport, SLOT(onYChanged(int)));
-    connect(mViewport, SIGNAL(xChanged(int)), mSideBar, SLOT(onXChanged(int)));
-    connect(mViewport, SIGNAL(yChanged(int)), mSideBar, SLOT(onYChanged(int)));
-    connect(mSideBar, SIGNAL(vertexPosVisibleChanged(bool)), mViewport, SLOT(onVertexPosVisibleChanged(bool)));
-    connect(mSideBar, SIGNAL(clearVertex()), mViewport, SLOT(onClearVertex()));
+    connect(mBtnCheckPointWidget, &QPushButton::clicked, [this]{ newWnd<CheckPointWidget>(); });
+    connect(mBtnCheckLineWidget, &QPushButton::clicked, [this]{ newWnd<CheckLineWidget>(); });
 
+    QVBoxLayout *layGroup = new QVBoxLayout;
+    layGroup->setMargin(20);
+    layGroup->addWidget(mBtnCheckPointWidget);
+    layGroup->addWidget(mBtnCheckLineWidget);
+    mGroupBox->setLayout(layGroup);
 
     QHBoxLayout *layMain = new QHBoxLayout;
-    layMain->setMargin(0);
-    layMain->setSpacing(0);
-    layMain->addWidget(mSideBar);
-    layMain->addWidget(mViewport, 1);
+    layMain->addWidget(mGroupBox);
     setLayout(layMain);
 
-    resize(600, 420);
+    adjustSize();
+    j::LimitSize(this, qMax(260, width()), height());
 }
 
 Widget::~Widget()
 {
 
+}
+
+template<typename T>void Widget::newWnd() {
+    QWidget* w = new T;
+    w->setAttribute(Qt::WA_DeleteOnClose);
+    w->show();
 }

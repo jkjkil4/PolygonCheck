@@ -1,5 +1,4 @@
-#ifndef DIGITEDIT_H
-#define DIGITEDIT_H
+#pragma once
 
 #include <QLineEdit>
 #include <QRegularExpressionValidator>
@@ -18,5 +17,3 @@ public:
     static QRegularExpression regExp;
     QRegularExpressionValidator *mRegExpVal = new QRegularExpressionValidator(regExp, this);
 };
-
-#endif // DIGITEDIT_H

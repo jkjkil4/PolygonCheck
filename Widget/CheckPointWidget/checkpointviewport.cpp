@@ -1,6 +1,6 @@
-#include "viewport.h"
+#include "checkpointviewport.h"
 
-Viewport::Viewport()
+CheckPointViewport::CheckPointViewport()
 {
     setMouseTracking(true);
 
@@ -13,13 +13,13 @@ Viewport::Viewport()
     setAutoFillBackground(true);
 }
 
-void Viewport::mousePressEvent(QMouseEvent *ev) {
+void CheckPointViewport::mousePressEvent(QMouseEvent *ev) {
     if(ev->button() == Qt::LeftButton) {
         switch(mMouseState) {
         case MouseState::AddPoint:
             mVecPoints << ev->pos() - mOffset;
             mVecIntersections = getIntersections(mCheckPos.y());
-            startTimer(mTimerLimitUpdate, 16);
+            StartTimer(mTimerLimitUpdate, 16);
             break;
         case MouseState::Move:
             mPrevPos = ev->pos();
@@ -32,34 +32,34 @@ void Viewport::mousePressEvent(QMouseEvent *ev) {
     }
 }
 
-void Viewport::mouseMoveEvent(QMouseEvent *ev) {
+void CheckPointViewport::mouseMoveEvent(QMouseEvent *ev) {
     switch(mMouseState) {
     case MouseState::AddPoint:
-        startTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 16);
         break;
     case MouseState::Move:
         if(ev->buttons() & Qt::LeftButton) {
             mOffset.rx() += ev->pos().x() - mPrevPos.x();
             mOffset.ry() += ev->pos().y() - mPrevPos.y();
             mPrevPos = ev->pos();
-            startTimer(mTimerLimitUpdate, 16);
+            StartTimer(mTimerLimitUpdate, 16);
         }
         break;
     case MouseState::SetPos:
         if(ev->buttons() & Qt::LeftButton)
             setPosByMouse(ev->pos());
-        startTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 16);
         break;
     default:;
     }
 }
 
-void Viewport::leaveEvent(QEvent *) {
+void CheckPointViewport::leaveEvent(QEvent *) {
     if(mMouseState == MouseState::AddPoint || mMouseState == MouseState::SetPos)
-        startTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 16);
 }
 
-void Viewport::paintEvent(QPaintEvent *) {
+void CheckPointViewport::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.setRenderHint(QPainter::RenderHint::Antialiasing);
 
@@ -122,12 +122,11 @@ void Viewport::paintEvent(QPaintEvent *) {
     }
 }
 
-void Viewport::startTimer(QTimer *pTimer, int msec) {
-    if(!pTimer->isActive())
-        pTimer->start(msec);
+void CheckPointViewport::closeEvent(QCloseEvent *) {
+    mTimerLimitUpdate->stop();
 }
 
-void Viewport::setPosByMouse(QPoint pos) {
+void CheckPointViewport::setPosByMouse(QPoint pos) {
     pos -= mOffset;
     bool isXChanged = pos.x() != mCheckPos.x();
     bool isYChanged = pos.y() != mCheckPos.y();
@@ -138,12 +137,12 @@ void Viewport::setPosByMouse(QPoint pos) {
             mVecIntersections = getIntersections(pos.y());
             emit yChanged(pos.y());
         }
-        startTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 16);
     }
 }
 
 #define FIX_INTERSECTION_AT_VERTEX
-QVector<double> Viewport::getIntersections(double y) {
+QVector<double> CheckPointViewport::getIntersections(double y) {
 #ifdef FIX_INTERSECTION_AT_VERTEX
     QVector<double> vecIntersections;
     if(mVecPoints.size() < 2)
@@ -217,7 +216,7 @@ QVector<double> Viewport::getIntersections(double y) {
 #endif
 }
 
-bool Viewport::isCheckPosInside() {
+bool CheckPointViewport::isCheckPosInside() {
     if(mVecPoints.isEmpty())
         return false;
 
@@ -231,7 +230,7 @@ bool Viewport::isCheckPosInside() {
     return false;
 }
 
-void Viewport::onMouseStateChanged(MouseState ms) {
+void CheckPointViewport::onMouseStateChanged(MouseState ms) {
     mMouseState = ms;
     switch(mMouseState) {
     case MouseState::Cursor:
@@ -247,31 +246,31 @@ void Viewport::onMouseStateChanged(MouseState ms) {
         setCursor(Qt::ArrowCursor);
         break;
     }
-    startTimer(mTimerLimitUpdate, 16);
+    StartTimer(mTimerLimitUpdate, 16);
 }
 
-void Viewport::onXChanged(int x) {
+void CheckPointViewport::onXChanged(int x) {
     if(x != mCheckPos.x()) {
         mCheckPos.setX(x);
-        startTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 16);
     }
 }
 
-void Viewport::onYChanged(int y) {
+void CheckPointViewport::onYChanged(int y) {
     if(y != mCheckPos.y()) {
         mCheckPos.setY(y);
         mVecIntersections = getIntersections(y);
-        startTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 16);
     }
 }
 
-void Viewport::onVertexPosVisibleChanged(bool visible) {
+void CheckPointViewport::onVertexPosVisibleChanged(bool visible) {
     isVertexPosVisible = visible;
-    startTimer(mTimerLimitUpdate, 16);
+    StartTimer(mTimerLimitUpdate, 16);
 }
 
-void Viewport::onClearVertex() {
+void CheckPointViewport::onClearVertex() {
     mVecPoints.clear();
     mVecIntersections.clear();
-    startTimer(mTimerLimitUpdate, 16);
+    StartTimer(mTimerLimitUpdate, 16);
 }

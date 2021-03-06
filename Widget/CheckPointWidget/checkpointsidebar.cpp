@@ -1,6 +1,6 @@
-#include "sidebar.h"
+#include "checkpointsidebar.h"
 
-SideBar::SideBar(QWidget *parent) : QWidget(parent)
+CheckPointSideBar::CheckPointSideBar(QWidget *parent) : QWidget(parent)
 {
     mRbtCursor->setChecked(true);
 
@@ -37,17 +37,11 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
         mEditGroup->setLayout(lay);
     }
 
-    QVBoxLayout *layCbb = new QVBoxLayout;
-    layCbb->addWidget(mCbbVertexPosVisible);
-
-    QVBoxLayout *layBtn = new QVBoxLayout;
-    layBtn->addWidget(mBtnClearVertex);
-
     QVBoxLayout *layMain = new QVBoxLayout;
     layMain->addWidget(mRbtGroup);
     layMain->addWidget(mEditGroup);
-    layMain->addLayout(layCbb);
-    layMain->addLayout(layBtn);
+    layMain->addWidget(mCbbVertexPosVisible);
+    layMain->addWidget(mBtnClearVertex);
     layMain->addStretch();
 
     setLayout(layMain);
@@ -60,11 +54,11 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
     setAutoFillBackground(true);
 }
 
-void SideBar::onXChanged(int x) {
+void CheckPointSideBar::onXChanged(int x) {
     mEditX->setText(QString::number(x));
 }
 
-void SideBar::onYChanged(int y) {
+void CheckPointSideBar::onYChanged(int y) {
     mEditY->setText(QString::number(y));
 }
 

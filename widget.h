@@ -1,9 +1,10 @@
 #pragma once
 
 #include <QWidget>
+#include <QPushButton>
 
-#include "Widget/sidebar.h"
-#include "Widget/viewport.h"
+#include "Widget/CheckPointWidget/checkpointwidget.h"
+#include "Widget/CheckLineWidget/checklinewidget.h"
 
 class Widget : public QWidget
 {
@@ -13,7 +14,10 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+    template<typename T>void newWnd();
+
 private:
-    SideBar *mSideBar = new SideBar;
-    Viewport *mViewport = new Viewport;
+    QGroupBox *mGroupBox = new QGroupBox("检测类型");
+    QPushButton *mBtnCheckPointWidget = new QPushButton("检测 点");
+    QPushButton *mBtnCheckLineWidget = new QPushButton("检测 线");
 };

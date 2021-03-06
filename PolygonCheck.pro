@@ -27,16 +27,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        Widget/CheckLineWidget/checklinesidebar.cpp \
+        Widget/CheckLineWidget/checklineviewport.cpp \
+        Widget/CheckLineWidget/checklinewidget.cpp \
+        Widget/CheckPointWidget/checkpointsidebar.cpp \
+        Widget/CheckPointWidget/checkpointviewport.cpp \
+        Widget/CheckPointWidget/checkpointwidget.cpp \
         Widget/digitedit.cpp \
-        Widget/sidebar.cpp \
-        Widget/viewport.cpp \
         main.cpp \
         widget.cpp
 
 HEADERS += \
+        Widget/CheckLineWidget/checklinesidebar.h \
+        Widget/CheckLineWidget/checklineviewport.h \
+        Widget/CheckLineWidget/checklinewidget.h \
+        Widget/CheckPointWidget/checkpointsidebar.h \
+        Widget/CheckPointWidget/checkpointviewport.h \
+        Widget/CheckPointWidget/checkpointwidget.h \
         Widget/digitedit.h \
-        Widget/sidebar.h \
-        Widget/viewport.h \
         header.h \
         widget.h
 

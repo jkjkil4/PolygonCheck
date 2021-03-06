@@ -10,16 +10,16 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include "digitedit.h"
+#include "../digitedit.h"
 
 #include <Lib/header.h>
 #include "header.h"
 
-class SideBar : public QWidget
+class CheckPointSideBar : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SideBar(QWidget *parent = nullptr);
+    explicit CheckPointSideBar(QWidget *parent = nullptr);
 
 signals:
     void mouseStateChanged(MouseState ms);

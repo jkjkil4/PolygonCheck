@@ -9,7 +9,7 @@
 #include "header.h"
 #include <Lib/paint.h>
 
-class Viewport : public QWidget
+class CheckPointViewport : public QWidget
 {
     Q_OBJECT
 protected:
@@ -17,11 +17,10 @@ protected:
     void mouseMoveEvent(QMouseEvent *ev) override;
     void leaveEvent(QEvent *) override;
     void paintEvent(QPaintEvent *) override;
+    void closeEvent(QCloseEvent *) override;
 
 public:
-    explicit Viewport();
-
-    void startTimer(QTimer *pTimer, int msec);
+    explicit CheckPointViewport();
 
     void setPosByMouse(QPoint pos);
     QVector<double> getIntersections(double y);
