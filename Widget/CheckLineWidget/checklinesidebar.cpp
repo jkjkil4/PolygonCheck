@@ -47,6 +47,7 @@ CheckLineSideBar::CheckLineSideBar(QWidget *parent) : QWidget(parent)
         lay->addLayout(layEditY1);
         lay->addLayout(layEditX2);
         lay->addLayout(layEditY2);
+        lay->addWidget(mCbbLinePosVisible);
         mEditGroup->setLayout(lay);
     }
 

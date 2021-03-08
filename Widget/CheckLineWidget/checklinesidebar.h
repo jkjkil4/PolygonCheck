@@ -42,7 +42,7 @@ private:
     QRadioButton *mRbtCursor = new QRadioButton("鼠标");
     QRadioButton *mRbtAddPoint = new QRadioButton("添加顶点");
     QRadioButton *mRbtMove = new QRadioButton("移动");
-    QRadioButton *mRbtSetPos = new QRadioButton("设置检测线");
+    QRadioButton *mRbtSetPos = new QRadioButton("设置端点");
 
     QGroupBox *mEditGroup = new QGroupBox("检测线端点");
     DigitEdit *mEditX1 = new DigitEdit("0");

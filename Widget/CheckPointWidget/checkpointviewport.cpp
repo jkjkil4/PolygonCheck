@@ -19,7 +19,7 @@ void CheckPointViewport::mousePressEvent(QMouseEvent *ev) {
         case MouseState::AddPoint:
             mVecPoints << ev->pos() - mOffset;
             mVecIntersections = getIntersections(mCheckPos.y());
-            StartTimer(mTimerLimitUpdate, 16);
+            StartTimer(mTimerLimitUpdate, 10);
             break;
         case MouseState::Move:
             mPrevPos = ev->pos();
@@ -35,20 +35,20 @@ void CheckPointViewport::mousePressEvent(QMouseEvent *ev) {
 void CheckPointViewport::mouseMoveEvent(QMouseEvent *ev) {
     switch(mMouseState) {
     case MouseState::AddPoint:
-        StartTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 10);
         break;
     case MouseState::Move:
         if(ev->buttons() & Qt::LeftButton) {
             mOffset.rx() += ev->pos().x() - mPrevPos.x();
             mOffset.ry() += ev->pos().y() - mPrevPos.y();
             mPrevPos = ev->pos();
-            StartTimer(mTimerLimitUpdate, 16);
+            StartTimer(mTimerLimitUpdate, 10);
         }
         break;
     case MouseState::SetPos:
         if(ev->buttons() & Qt::LeftButton)
             setPosByMouse(ev->pos());
-        StartTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 10);
         break;
     default:;
     }
@@ -56,7 +56,7 @@ void CheckPointViewport::mouseMoveEvent(QMouseEvent *ev) {
 
 void CheckPointViewport::leaveEvent(QEvent *) {
     if(mMouseState == MouseState::AddPoint || mMouseState == MouseState::SetPos)
-        StartTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 10);
 }
 
 void CheckPointViewport::paintEvent(QPaintEvent *) {
@@ -137,7 +137,7 @@ void CheckPointViewport::setPosByMouse(QPoint pos) {
             mVecIntersections = getIntersections(pos.y());
             emit yChanged(pos.y());
         }
-        StartTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 10);
     }
 }
 
@@ -246,13 +246,13 @@ void CheckPointViewport::onMouseStateChanged(MouseState ms) {
         setCursor(Qt::ArrowCursor);
         break;
     }
-    StartTimer(mTimerLimitUpdate, 16);
+    StartTimer(mTimerLimitUpdate, 10);
 }
 
 void CheckPointViewport::onXChanged(int x) {
     if(x != mCheckPos.x()) {
         mCheckPos.setX(x);
-        StartTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 10);
     }
 }
 
@@ -260,17 +260,17 @@ void CheckPointViewport::onYChanged(int y) {
     if(y != mCheckPos.y()) {
         mCheckPos.setY(y);
         mVecIntersections = getIntersections(y);
-        StartTimer(mTimerLimitUpdate, 16);
+        StartTimer(mTimerLimitUpdate, 10);
     }
 }
 
 void CheckPointViewport::onVertexPosVisibleChanged(bool visible) {
     isVertexPosVisible = visible;
-    StartTimer(mTimerLimitUpdate, 16);
+    StartTimer(mTimerLimitUpdate, 10);
 }
 
 void CheckPointViewport::onClearVertex() {
     mVecPoints.clear();
     mVecIntersections.clear();
-    StartTimer(mTimerLimitUpdate, 16);
+    StartTimer(mTimerLimitUpdate, 10);
 }
