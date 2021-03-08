@@ -144,8 +144,10 @@ void CheckLineViewport::paintEvent(QPaintEvent *) {
         QPoint pos = mapFromGlobal(cursor().pos());
         if(QRect(0, 0, width(), height()).contains(pos)) {
             QString text = "(" + QString::number(pos.x() - mOffset.x()) + ", " + QString::number(pos.y() - mOffset.y()) + ")";
-            p.setPen(Qt::black);
-            j::DrawText(&p, pos + QPoint(2, -2), Qt::AlignLeft | Qt::AlignBottom, "左键设置端点1\n右键设置端点2");
+            if(mMouseState == MouseState::SetPos) {
+                p.setPen(Qt::black);
+                j::DrawText(&p, pos + QPoint(2, -2), Qt::AlignLeft | Qt::AlignBottom, "左键设置端点1\n右键设置端点2");
+            }
             p.setPen(Qt::blue);
             j::DrawText(&p, pos + QPoint(2, 2), Qt::AlignLeft | Qt::AlignTop, text);
         }
