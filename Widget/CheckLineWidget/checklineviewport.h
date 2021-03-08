@@ -57,7 +57,7 @@ private:
     QPoint mCheckPos1 = QPoint(0, 0);
     QPoint mCheckPos2 = QPoint(0, 0);
 
-    double rotatedRadius = 0;
+    double mRotatedRadius = 0;
     QVector<QPointF> mVecPointsRotated;
     QPointF mCheckPos1Rotated;
     QPointF mCheckPos2Rotated;
@@ -66,8 +66,8 @@ private:
 
     QPoint mPrevPos;
     QPoint mOffset;
-    bool isLinePosVisible = false;
-    bool isVertexPosVisible = false;
+    bool mIsLinePosVisible = false;
+    bool mIsVertexPosVisible = false;
 
     QTimer *mTimerLimitGetResult = new QTimer(this);
     QTimer *mTimerLimitUpdate = new QTimer(this);

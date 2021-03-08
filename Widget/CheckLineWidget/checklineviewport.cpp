@@ -82,15 +82,21 @@ void CheckLineViewport::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.setRenderHint(QPainter::RenderHint::Antialiasing);
 
-//    //绘制判断线
-//    if(mVecIntersections.size() > 1) {
-//        bool isIn = true;
-//        double prev = mVecIntersections[0];
-//        //QPointF prev = ;
-//        for(int i = 1; i < mVecIntersections.size(); i++) {
-//            double cur =
-//        }
-//    }
+    //绘制判断线
+    if(mVecIntersections.size() > 1) {
+        bool isIn = true;
+        double firstX = mVecIntersections[0];
+        double rotatedY = mCheckPos1Rotated.y();
+        QPointF prev = Rotate(QPointF(firstX, rotatedY), mRotatedRadius) + mOffset;
+        for(int i = 1; i < mVecIntersections.size(); i++) {
+            double curX = mVecIntersections[i];
+            QPointF cur = Rotate(QPointF(curX, rotatedY), mRotatedRadius) + mOffset;
+            p.setPen(QPen(isIn ? Qt::green : Qt::red, 1));
+            p.drawLine(prev, cur);
+            prev = cur;
+            isIn = !isIn;
+        }
+    }
 
     if(!mVecPoints.isEmpty()) {
         //绘制多边形
@@ -111,7 +117,7 @@ void CheckLineViewport::paintEvent(QPaintEvent *) {
         }
 
         //绘制顶点坐标
-        if(isVertexPosVisible) {
+        if(mIsVertexPosVisible) {
             p.setPen(Qt::black);
             for(QPointF &pos : mVecPoints) {
                 QString text = "(" + QString::number(pos.x()) + ", " + QString::number(pos.y()) + ")";
@@ -123,6 +129,15 @@ void CheckLineViewport::paintEvent(QPaintEvent *) {
     //绘制检测线
     p.setPen(QPen(isCheckLineInside() ? QColor(0, 190, 0) : QColor(190, 0, 0), 4));
     p.drawLine(mCheckPos1 + mOffset, mCheckPos2 + mOffset);
+
+    //绘制端点坐标
+    if(mIsLinePosVisible) {
+        p.setPen(Qt::magenta);
+        QString text = "(" + QString::number(mCheckPos1.x()) + ", " + QString::number(mCheckPos1.y()) + ")";
+        j::DrawText(&p, mCheckPos1 + mOffset + QPoint(2, 2), Qt::AlignLeft | Qt::AlignTop, text);
+        text = "(" + QString::number(mCheckPos2.x()) + ", " + QString::number(mCheckPos2.y()) + ")";
+        j::DrawText(&p, mCheckPos2 + mOffset + QPoint(2, 2), Qt::AlignLeft | Qt::AlignTop, text);
+    }
 
     //绘制鼠标位置
     if(mMouseState == MouseState::AddPoint || mMouseState == MouseState::SetPos) {
@@ -156,13 +171,13 @@ void CheckLineViewport::setPosByMouse(QPoint &rPoint, QPoint pos, CheckLineViewp
 }
 
 void CheckLineViewport::getRotated() {
-    rotatedRadius = qAtan2(mCheckPos2.y() - mCheckPos1.y(), mCheckPos2.x() - mCheckPos1.x());
-    mCheckPos1Rotated = Rotate(mCheckPos1, -rotatedRadius);
-    mCheckPos2Rotated = Rotate(mCheckPos2, -rotatedRadius);
+    mRotatedRadius = qAtan2(mCheckPos2.y() - mCheckPos1.y(), mCheckPos2.x() - mCheckPos1.x());
+    mCheckPos1Rotated = Rotate(mCheckPos1, -mRotatedRadius);
+    mCheckPos2Rotated = Rotate(mCheckPos2, -mRotatedRadius);
 
     mVecPointsRotated.clear();
     for(const QPointF &pos : mVecPoints)
-        mVecPointsRotated << Rotate(pos, -rotatedRadius);
+        mVecPointsRotated << Rotate(pos, -mRotatedRadius);
 }
 
 void CheckLineViewport::getIntersections() {
@@ -285,12 +300,12 @@ void CheckLineViewport::onY2Changed(int y) {
 }
 
 void CheckLineViewport::onLinePosVisibleChanged(bool visible) {
-    isLinePosVisible = visible;
+    mIsLinePosVisible = visible;
     StartTimer(mTimerLimitUpdate, 10);
 }
 
 void CheckLineViewport::onVertexPosVisibleChanged(bool visible) {
-    isVertexPosVisible = visible;
+    mIsVertexPosVisible = visible;
     StartTimer(mTimerLimitUpdate, 10);
 }
 
