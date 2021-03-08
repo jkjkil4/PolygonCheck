@@ -82,6 +82,16 @@ void CheckLineViewport::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.setRenderHint(QPainter::RenderHint::Antialiasing);
 
+//    //绘制判断线
+//    if(mVecIntersections.size() > 1) {
+//        bool isIn = true;
+//        double prev = mVecIntersections[0];
+//        //QPointF prev = ;
+//        for(int i = 1; i < mVecIntersections.size(); i++) {
+//            double cur =
+//        }
+//    }
+
     if(!mVecPoints.isEmpty()) {
         //绘制多边形
         p.setPen(QPen(Qt::black, 2));
@@ -147,19 +157,12 @@ void CheckLineViewport::setPosByMouse(QPoint &rPoint, QPoint pos, CheckLineViewp
 
 void CheckLineViewport::getRotated() {
     rotatedRadius = qAtan2(mCheckPos2.y() - mCheckPos1.y(), mCheckPos2.x() - mCheckPos1.x());
-    double sin = qSin(-rotatedRadius);
-    double cos = qCos(-rotatedRadius);
-    mCheckPos1Rotated.setX(mCheckPos1.x() * cos - mCheckPos1.y() * sin);
-    mCheckPos1Rotated.setY(mCheckPos1.x() * sin + mCheckPos1.y() * cos);
-    mCheckPos2Rotated.setX(mCheckPos2.x() * cos - mCheckPos2.y() * sin);
-    mCheckPos2Rotated.setY(mCheckPos2.x() * sin + mCheckPos2.y() * cos);
+    mCheckPos1Rotated = Rotate(mCheckPos1, -rotatedRadius);
+    mCheckPos2Rotated = Rotate(mCheckPos2, -rotatedRadius);
 
     mVecPointsRotated.clear();
-    for(const QPointF &pos : mVecPoints) {
-        double x = pos.x() * cos - pos.y() * sin;
-        double y = pos.x() * sin + pos.y() * cos;
-        mVecPointsRotated << QPointF(x, y);
-    }
+    for(const QPointF &pos : mVecPoints)
+        mVecPointsRotated << Rotate(pos, -rotatedRadius);
 }
 
 void CheckLineViewport::getIntersections() {

@@ -63,7 +63,7 @@ void CheckPointViewport::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.setRenderHint(QPainter::RenderHint::Antialiasing);
 
-    //绘制检测线
+    //绘制判断线
     if(mVecIntersections.size() > 1) {
         bool isIn = true;
         double prev = mVecIntersections[0];

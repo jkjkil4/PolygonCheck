@@ -8,7 +8,6 @@
 
 #include "header.h"
 #include <Lib/paint.h>
-#include <qmath.h>
 
 class CheckLineViewport : public QWidget
 {
