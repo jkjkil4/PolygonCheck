@@ -146,12 +146,75 @@ void CheckLineViewport::setPosByMouse(QPoint &rPoint, QPoint pos, CheckLineViewp
 }
 
 void CheckLineViewport::getRotated() {
-//    rotatedRadius = qAtan2(mCheckPos2.y() - mCheckPos1.y(), mCheckPos2.x() - mCheckPos1.x());
+    rotatedRadius = qAtan2(mCheckPos2.y() - mCheckPos1.y(), mCheckPos2.x() - mCheckPos1.x());
+    double sin = qSin(-rotatedRadius);
+    double cos = qCos(-rotatedRadius);
+    mCheckPos1Rotated.setX(mCheckPos1.x() * cos - mCheckPos1.y() * sin);
+    mCheckPos1Rotated.setY(mCheckPos1.x() * sin + mCheckPos1.y() * cos);
+    mCheckPos2Rotated.setX(mCheckPos2.x() * cos - mCheckPos2.y() * sin);
+    mCheckPos2Rotated.setY(mCheckPos2.x() * sin + mCheckPos2.y() * cos);
 
+    mVecPointsRotated.clear();
+    for(const QPointF &pos : mVecPoints) {
+        double x = pos.x() * cos - pos.y() * sin;
+        double y = pos.x() * sin + pos.y() * cos;
+        mVecPointsRotated << QPointF(x, y);
+    }
 }
 
 void CheckLineViewport::getIntersections() {
+    mVecIntersections.clear();
+    if(mVecPoints.size() < 2)
+        return;
 
+    //检测是否全部都为水平线
+    double tmpY = (*mVecPointsRotated.begin()).y();
+    bool isAllHor = true;
+    for(int i = 1; i < mVecPointsRotated.size(); i++) {
+        if(mVecPointsRotated[i].y() != tmpY) {
+            isAllHor = false;
+            break;
+        }
+    }
+    if(isAllHor)
+        return;
+
+    double y = mCheckPos1Rotated.y();
+
+    //从末尾开始遍历得到第一个不为水平的线的 走向 和 交点情况
+    bool prevTrend = false;
+    bool prevHasIntersection = false;
+    QPointF prev = *mVecPointsRotated.rbegin();
+    for(auto iter = mVecPointsRotated.rbegin() + 1; iter != mVecPointsRotated.rend(); ++iter) {
+        const QPointF &cur = *iter;
+        if(prev.y() != cur.y()) {
+            prevTrend = cur.y() < prev.y(); //因为是反向遍历，所以是小于（和后面的大于相反）
+            prevHasIntersection = (y >= qMin(prev.y(), cur.y()) && y <= qMax(prev.y(), cur.y()));
+            break;
+        }
+        prev = cur;
+    }
+
+    //计算交点
+    prev = *mVecPointsRotated.rbegin();
+    for(const QPointF &cur : mVecPointsRotated) {
+        bool hasIntersection = false;
+        if(prev.y() != cur.y()) {
+            bool trend = cur.y() > prev.y();
+            if(trend != prevTrend || !prevHasIntersection) {
+                if(y >= qMin(prev.y(), cur.y()) && y <= qMax(prev.y(), cur.y())) {
+                    hasIntersection = true;
+                    mVecIntersections << prev.x() + (cur.x() - prev.x()) * (y - prev.y()) / (cur.y() - prev.y());
+                }
+            }
+            if(trend != prevTrend)
+                prevTrend = trend;
+        }
+        prevHasIntersection = hasIntersection;
+        prev = cur;
+    }
+
+    std::sort(mVecIntersections.begin(), mVecIntersections.end());
 }
 
 void CheckLineViewport::onMouseStateChanged(MouseState ms) {

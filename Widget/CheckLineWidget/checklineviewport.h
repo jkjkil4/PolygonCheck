@@ -50,7 +50,7 @@ public slots:
     void onGetResult();
 
 private:
-    static double pi;
+    //static double pi;
 
     MouseState mMouseState = MouseState::Cursor;
 
