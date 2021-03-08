@@ -111,7 +111,7 @@ void CheckLineViewport::paintEvent(QPaintEvent *) {
     }
 
     //绘制检测线
-    p.setPen(QPen(QColor(0, 190, 0), 4));
+    p.setPen(QPen(isCheckLineInside() ? QColor(0, 190, 0) : QColor(190, 0, 0), 4));
     p.drawLine(mCheckPos1 + mOffset, mCheckPos2 + mOffset);
 
     //绘制鼠标位置
@@ -215,6 +215,19 @@ void CheckLineViewport::getIntersections() {
     }
 
     std::sort(mVecIntersections.begin(), mVecIntersections.end());
+}
+
+bool CheckLineViewport::isCheckLineInside() {
+    if(mVecPoints.isEmpty())
+        return false;
+    double checkX = mCheckPos1Rotated.x();
+    bool isInside = false;
+    for(double x : mVecIntersections) {
+        if(x > checkX)
+            return isInside && mCheckPos2Rotated.x() < x;
+        isInside = !isInside;
+    }
+    return false;
 }
 
 void CheckLineViewport::onMouseStateChanged(MouseState ms) {
