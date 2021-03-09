@@ -26,6 +26,7 @@ public:
 
     void setPosByMouse(QPoint pos);
     void check();
+    bool isCheckCircleInside();
 
 signals:
     void xChanged(int x);

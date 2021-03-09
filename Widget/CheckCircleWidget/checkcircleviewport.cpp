@@ -58,6 +58,7 @@ void CheckCircleViewport::mouseMoveEvent(QMouseEvent *ev) {
 void CheckCircleViewport::wheelEvent(QWheelEvent *ev) {
     if(mMouseState == MouseState::SetPos) {
         mRad += ev->delta() / 120;
+        check();
         emit radChanged(mRad);
         StartTimer(mTimerLimitUpdate, 10);
     }
@@ -101,7 +102,7 @@ void CheckCircleViewport::paintEvent(QPaintEvent *) {
     }
 
     //绘制检测圆
-    QColor col = QColor(0, 190, 0);
+    QColor col = isCheckCircleInside() ? QColor(0, 190, 0) : QColor(190, 0, 0);
     p.setPen(col.darker());
     p.setBrush(col);
     p.drawEllipse(mCheckPos, mRad, mRad);
@@ -119,9 +120,6 @@ void CheckCircleViewport::paintEvent(QPaintEvent *) {
             j::DrawText(&p, pos + QPoint(2, 2), Qt::AlignLeft | Qt::AlignTop, text);
         }
     }
-
-    j::SetPointSize(&p, 20);
-    j::DrawText(&p, 0, 0, Qt::AlignLeft | Qt::AlignTop, QString::number(mHasCollision));
 }
 
 void CheckCircleViewport::closeEvent(QCloseEvent *) {
@@ -174,6 +172,22 @@ void CheckCircleViewport::check() {
 
         prev = cur;
     }
+
+    //得到圆心所在水平线与多边形的交点
+    mVecIntersections = GetIntersections(mVecPoints, mCheckPos.y());
+}
+
+bool CheckCircleViewport::isCheckCircleInside() {
+    if(mHasCollision || mVecIntersections.isEmpty())
+        return false;
+    double checkX = mCheckPos.x();
+    bool isInside = false;
+    for(double x : mVecIntersections) {
+        if(x > checkX)
+            return isInside;
+        isInside = !isInside;
+    }
+    return false;
 }
 
 
