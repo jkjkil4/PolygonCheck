@@ -27,6 +27,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        Widget/CheckCircleWidget/checkcirclesidebar.cpp \
+        Widget/CheckCircleWidget/checkcircleviewport.cpp \
+        Widget/CheckCircleWidget/checkcirclewidget.cpp \
         Widget/CheckLineWidget/checklinesidebar.cpp \
         Widget/CheckLineWidget/checklineviewport.cpp \
         Widget/CheckLineWidget/checklinewidget.cpp \
@@ -38,6 +41,9 @@ SOURCES += \
         widget.cpp
 
 HEADERS += \
+        Widget/CheckCircleWidget/checkcirclesidebar.h \
+        Widget/CheckCircleWidget/checkcircleviewport.h \
+        Widget/CheckCircleWidget/checkcirclewidget.h \
         Widget/CheckLineWidget/checklinesidebar.h \
         Widget/CheckLineWidget/checklineviewport.h \
         Widget/CheckLineWidget/checklinewidget.h \

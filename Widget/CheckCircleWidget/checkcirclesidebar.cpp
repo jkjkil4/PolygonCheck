@@ -1,6 +1,6 @@
-#include "checkpointsidebar.h"
+#include "checkcirclesidebar.h"
 
-CheckPointSideBar::CheckPointSideBar(QWidget *parent) : QWidget(parent)
+CheckCircleSideBar::CheckCircleSideBar(QWidget *parent) : QWidget(parent)
 {
     mRbtCursor->setChecked(true);
 
@@ -10,6 +10,7 @@ CheckPointSideBar::CheckPointSideBar(QWidget *parent) : QWidget(parent)
     connect(mRbtSetPos, &QRadioButton::clicked, [this](bool checked){ if(checked) emit mouseStateChanged(MouseState::SetPos); });
     connect(mEditX, &DigitEdit::textChanged, [this](const QString &text){ emit xChanged(text.toInt()); });
     connect(mEditY, &DigitEdit::textChanged, [this](const QString &text){ emit yChanged(text.toInt()); });
+    connect(mEditRad, &DigitEdit::textChanged, [this](const QString &text){ emit radChanged(text.toInt()); });
     connect(mCbbVertexPosVisible, &QCheckBox::stateChanged, [this](int state){ emit vertexPosVisibleChanged(state); });
     connect(mBtnClearVertex, &QPushButton::clicked, [this](){ emit clearVertex(); });
 
@@ -31,9 +32,14 @@ CheckPointSideBar::CheckPointSideBar(QWidget *parent) : QWidget(parent)
         layEditY->addWidget(new QLabel("y:"));
         layEditY->addWidget(mEditY);
 
+        QHBoxLayout *layEditRad = new QHBoxLayout;
+        layEditRad->addWidget(new QLabel("半径:"));
+        layEditRad->addWidget(mEditRad);
+
         QVBoxLayout *lay = new QVBoxLayout;
         lay->addLayout(layEditX);
         lay->addLayout(layEditY);
+        lay->addLayout(layEditRad);
         mEditGroup->setLayout(lay);
     }
 
@@ -54,11 +60,14 @@ CheckPointSideBar::CheckPointSideBar(QWidget *parent) : QWidget(parent)
     setAutoFillBackground(true);
 }
 
-void CheckPointSideBar::onXChanged(int x) {
+void CheckCircleSideBar::onXChanged(int x) {
     mEditX->setText(QString::number(x));
 }
 
-void CheckPointSideBar::onYChanged(int y) {
+void CheckCircleSideBar::onYChanged(int y) {
     mEditY->setText(QString::number(y));
 }
 
+void CheckCircleSideBar::onRadChanged(int r) {
+    mEditRad->setText(QString::number(r));
+}

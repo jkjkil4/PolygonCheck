@@ -8,10 +8,10 @@ CheckLineSideBar::CheckLineSideBar(QWidget *parent) : QWidget(parent)
     connect(mRbtAddPoint, &QRadioButton::clicked, [this](bool checked) { if(checked) emit mouseStateChanged(MouseState::AddPoint); });
     connect(mRbtMove, &QRadioButton::clicked, [this](bool checked){ if(checked) emit mouseStateChanged(MouseState::Move); });
     connect(mRbtSetPos, &QRadioButton::clicked, [this](bool checked){ if(checked) emit mouseStateChanged(MouseState::SetPos); });
-    connect(mEditX1, &QLineEdit::textChanged, [this](const QString &text){ emit x1Changed(text.toInt()); });
-    connect(mEditY1, &QLineEdit::textChanged, [this](const QString &text){ emit y1Changed(text.toInt()); });
-    connect(mEditX2, &QLineEdit::textChanged, [this](const QString &text){ emit x2Changed(text.toInt()); });
-    connect(mEditY2, &QLineEdit::textChanged, [this](const QString &text){ emit y2Changed(text.toInt()); });
+    connect(mEditX1, &DigitEdit::textChanged, [this](const QString &text){ emit x1Changed(text.toInt()); });
+    connect(mEditY1, &DigitEdit::textChanged, [this](const QString &text){ emit y1Changed(text.toInt()); });
+    connect(mEditX2, &DigitEdit::textChanged, [this](const QString &text){ emit x2Changed(text.toInt()); });
+    connect(mEditY2, &DigitEdit::textChanged, [this](const QString &text){ emit y2Changed(text.toInt()); });
     connect(mCbbLinePosVisible, &QCheckBox::stateChanged, [this](int state){ emit linePosVisibleChanged(state); });
     connect(mCbbVertexPosVisible, &QCheckBox::stateChanged, [this](int state){ emit vertexPosVisibleChanged(state); });
     connect(mBtnClearVertex, &QPushButton::clicked, [this](){ emit clearVertex(); });
