@@ -23,7 +23,6 @@ public:
     explicit CheckPointViewport();
 
     void setPosByMouse(QPoint pos);
-    QVector<double> getIntersections(double y);
 
     bool isCheckPosInside();
 

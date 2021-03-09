@@ -26,7 +26,6 @@ public:
 
     void setPosByMouse(QPoint &rPoint, QPoint pos, CheckLineViewport *obj, SignalFn xSignal, SignalFn ySignal);
     void getRotated();
-    void getIntersections();
 
     bool isCheckLineInside();
 

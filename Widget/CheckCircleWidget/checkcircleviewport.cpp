@@ -28,20 +28,47 @@ void CheckCircleViewport::paintEvent(QPaintEvent *) {
 }
 
 void CheckCircleViewport::closeEvent(QCloseEvent *) {
+    mTimerLimitUpdate->stop();
+}
+
+
+void CheckCircleViewport::check() {
 
 }
 
 
 void CheckCircleViewport::onMouseStateChanged(MouseState ms) {
-
+    mMouseState = ms;
+    switch(mMouseState) {
+    case MouseState::Cursor:
+        setCursor(Qt::ArrowCursor);
+        break;
+    case MouseState::AddPoint:
+        setCursor(Qt::CrossCursor);
+        break;
+    case MouseState::Move:
+        setCursor(Qt::SizeAllCursor);
+        break;
+    case MouseState::SetPos:
+        setCursor(Qt::ArrowCursor);
+        break;
+    }
+    StartTimer(mTimerLimitUpdate, 10);
 }
 
 void CheckCircleViewport::onXChanged(int x) {
-
+//    if(x != mCheckPos.x()) {
+//        mCheckPos.setX(x);
+//        StartTimer(mTimerLimitUpdate, 10);
+//    }
 }
 
 void CheckCircleViewport::onYChanged(int y) {
-
+//    if(y != mCheckPos.y()) {
+//        mCheckPos.setY(y);
+//        mVecIntersections = getIntersections(y);
+//        StartTimer(mTimerLimitUpdate, 10);
+//    }
 }
 
 void CheckCircleViewport::onRadChanged(int r) {

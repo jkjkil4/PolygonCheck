@@ -18,7 +18,7 @@ void CheckPointViewport::mousePressEvent(QMouseEvent *ev) {
         switch(mMouseState) {
         case MouseState::AddPoint:
             mVecPoints << ev->pos() - mOffset;
-            mVecIntersections = getIntersections(mCheckPos.y());
+            mVecIntersections = GetIntersections(mVecPoints, mCheckPos.y());
             StartTimer(mTimerLimitUpdate, 10);
             break;
         case MouseState::Move:
@@ -134,86 +134,11 @@ void CheckPointViewport::setPosByMouse(QPoint pos) {
         mCheckPos = pos;
         if(isXChanged) emit xChanged(pos.x());
         if(isYChanged) {
-            mVecIntersections = getIntersections(pos.y());
+            mVecIntersections = GetIntersections(mVecPoints, pos.y());
             emit yChanged(pos.y());
         }
         StartTimer(mTimerLimitUpdate, 10);
     }
-}
-
-#define FIX_INTERSECTION_AT_VERTEX
-QVector<double> CheckPointViewport::getIntersections(double y) {
-#ifdef FIX_INTERSECTION_AT_VERTEX
-    QVector<double> vecIntersections;
-    if(mVecPoints.size() < 2)
-        return vecIntersections;
-
-    //检测是否全部都为水平线
-    double tmpY = (*mVecPoints.begin()).y();
-    bool isAllHor = true;
-    for(int i = 1; i < mVecPoints.size(); i++) {
-        if(mVecPoints[i].y() != tmpY) {
-            isAllHor = false;
-            break;
-        }
-    }
-    if(isAllHor)
-        return vecIntersections;
-
-    //从末尾开始遍历得到第一个不为水平的线的 走向 和 交点情况
-    bool prevTrend = false;
-    bool prevHasIntersection = false;
-    QPointF prev = *mVecPoints.rbegin();
-    for(auto iter = mVecPoints.rbegin() + 1; iter != mVecPoints.rend(); ++iter) {
-        const QPointF &cur = *iter;
-        if(prev.y() != cur.y()) {
-            prevTrend = cur.y() < prev.y(); //因为是反向遍历，所以是小于（和后面的大于相反）
-            prevHasIntersection = (y >= qMin(prev.y(), cur.y()) && y <= qMax(prev.y(), cur.y()));
-            break;
-        }
-        prev = cur;
-    }
-
-    //计算交点
-    prev = *mVecPoints.rbegin();
-    for(const QPointF &cur : mVecPoints) {
-        bool hasIntersection = false;
-        if(prev.y() != cur.y()) {
-            bool trend = cur.y() > prev.y();
-            if(trend != prevTrend || !prevHasIntersection) {
-                if(y >= qMin(prev.y(), cur.y()) && y <= qMax(prev.y(), cur.y())) {
-                    hasIntersection = true;
-                    vecIntersections << prev.x() + (cur.x() - prev.x()) * (y - prev.y()) / (cur.y() - prev.y());
-                }
-            }
-            if(trend != prevTrend)
-                prevTrend = trend;
-        }
-        prevHasIntersection = hasIntersection;
-        prev = cur;
-    }
-
-    std::sort(vecIntersections.begin(), vecIntersections.end());
-
-    return vecIntersections;
-#else
-    QVector<double> vecIntersections;
-    if(mVecPoints.size() < 2)
-        return vecIntersections;
-
-    //计算交点
-    QPointF prev = *mVecPoints.rbegin();
-    for(const QPointF &cur : mVecPoints) {
-        if(prev.y() != cur.y() && y >= qMin(prev.y(), cur.y()) && y <= qMax(prev.y(), cur.y())) {
-            vecIntersections << prev.x() + (cur.x() - prev.x()) * (y - prev.y()) / (cur.y() - prev.y());
-        }
-        prev = cur;
-    }
-
-    std::sort(vecIntersections.begin(), vecIntersections.end());
-
-    return vecIntersections;
-#endif
 }
 
 bool CheckPointViewport::isCheckPosInside() {
@@ -259,7 +184,7 @@ void CheckPointViewport::onXChanged(int x) {
 void CheckPointViewport::onYChanged(int y) {
     if(y != mCheckPos.y()) {
         mCheckPos.setY(y);
-        mVecIntersections = getIntersections(y);
+        mVecIntersections = GetIntersections(mVecPoints, y);
         StartTimer(mTimerLimitUpdate, 10);
     }
 }

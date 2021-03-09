@@ -2,6 +2,8 @@
 
 #include <QWidget>
 
+#include <QTimer>
+
 #include "header.h"
 
 class CheckCircleViewport : public QWidget
@@ -17,6 +19,8 @@ protected:
 public:
     explicit CheckCircleViewport(QWidget *parent = nullptr);
 
+    void check();
+
 signals:
     void xChanged(int x);
     void yChanged(int y);
@@ -31,7 +35,20 @@ public slots:
     void onClearVertex();
 
 private:
-    //MouseState mMouseState = MouseState::Cursor;
+    MouseState mMouseState = MouseState::Cursor;
+
+    QVector<QPointF> mVecPoints;
+    QPoint mCheckPos = QPoint(0, 0);
+    int rad = 5;
+
+    bool hasCollision = false;
+    QVector<double> mVecIntersections;
+
+    QPoint mPrevPos;
+    QPoint mOffset;
+    bool isVertexPosVisible = false;
+
+    QTimer *mTimerLimitUpdate = new QTimer(this);
 
 };
 
