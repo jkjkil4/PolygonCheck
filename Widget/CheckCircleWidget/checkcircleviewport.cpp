@@ -119,6 +119,9 @@ void CheckCircleViewport::paintEvent(QPaintEvent *) {
             j::DrawText(&p, pos + QPoint(2, 2), Qt::AlignLeft | Qt::AlignTop, text);
         }
     }
+
+    j::SetPointSize(&p, 20);
+    j::DrawText(&p, 0, 0, Qt::AlignLeft | Qt::AlignTop, QString::number(mHasCollision));
 }
 
 void CheckCircleViewport::closeEvent(QCloseEvent *) {
@@ -139,7 +142,38 @@ void CheckCircleViewport::setPosByMouse(QPoint pos) {
 }
 
 void CheckCircleViewport::check() {
-    //TODO: ....
+    mHasCollision = false;
+    if(mVecPoints.size() < 3) {
+        mHasCollision = true;
+        return;
+    }
+
+    int circleLeft = mCheckPos.x() - mRad;
+    int circleRight = mCheckPos.x() + mRad;
+    int circleTop = mCheckPos.y() - mRad;
+    int circleBottom = mCheckPos.y() + mRad;
+
+    //判断圆和多边形是否有交点
+    QPointF prev = *mVecPoints.rbegin();
+    for(const QPointF &cur : mVecPoints) {
+        //如果圆形的矩形区域和线段的矩形区域重叠，则进行进一步判定
+        if(circleRight >= qMin(prev.x(), cur.x()) && circleLeft <= qMax(prev.x(), cur.x())
+                && circleBottom >= qMin(prev.y(), cur.y()) && circleTop <= qMax(prev.y(), cur.y())) {
+
+            double disA = qSqrt(qPow(cur.x() - prev.x(), 2) + qPow(cur.y() - prev.y(), 2));     //prev和cur之间的距离
+            double disB = qSqrt(qPow(mCheckPos.x() - prev.x(), 2) + qPow(mCheckPos.y() - prev.y(), 2));     //圆心和prev之间的距离
+            double disC = qSqrt(qPow(mCheckPos.x() - cur.x(), 2) + qPow(mCheckPos.y() - cur.y(), 2));       //圆心和cur之间的距离
+            double p = (disA + disB + disC) / 2;    //某公式相关
+            double disVer = 2 * qSqrt(p * (p - disA) * (p - disB) * (p - disC)) / disA;     //垂直距离
+            double disMin = qMin(qMin(disB, disC), disVer);     //圆心相关的三个距离中的最短距离
+            if(disMin < mRad) {     //圆与线段有交点
+                mHasCollision = true;
+                return;
+            }
+        }
+
+        prev = cur;
+    }
 }
 
 
@@ -193,7 +227,7 @@ void CheckCircleViewport::onVertexPosVisibleChanged(bool visible) {
 
 void CheckCircleViewport::onClearVertex() {
     mVecPoints.clear();
-    mHasCollision = false;
+    mHasCollision = true;
     mVecIntersections.clear();
     StartTimer(mTimerLimitUpdate, 10);
 }

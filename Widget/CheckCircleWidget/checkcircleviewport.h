@@ -47,7 +47,7 @@ private:
     QPoint mCheckPos = QPoint(0, 0);
     int mRad = 5;
 
-    bool mHasCollision = false;
+    bool mHasCollision = true;
     QVector<double> mVecIntersections;
 
     QPoint mPrevPos;
