@@ -3,8 +3,12 @@
 #include <QWidget>
 
 #include <QTimer>
+#include <QMouseEvent>
+#include <QWheelEvent>
+#include <QPainter>
 
 #include "header.h"
+#include <Lib/paint.h>
 
 class CheckCircleViewport : public QWidget
 {
@@ -12,6 +16,7 @@ class CheckCircleViewport : public QWidget
 protected:
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
+    void wheelEvent(QWheelEvent *ev) override;
     void leaveEvent(QEvent *) override;
     void paintEvent(QPaintEvent *) override;
     void closeEvent(QCloseEvent *) override;
@@ -19,6 +24,7 @@ protected:
 public:
     explicit CheckCircleViewport(QWidget *parent = nullptr);
 
+    void setPosByMouse(QPoint pos);
     void check();
 
 signals:
@@ -39,9 +45,9 @@ private:
 
     QVector<QPointF> mVecPoints;
     QPoint mCheckPos = QPoint(0, 0);
-    int rad = 5;
+    int mRad = 5;
 
-    bool hasCollision = false;
+    bool mHasCollision = false;
     QVector<double> mVecIntersections;
 
     QPoint mPrevPos;
