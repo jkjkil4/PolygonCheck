@@ -1,5 +1,4 @@
-#ifndef CHECKPOLYGONVIEWPORT_H
-#define CHECKPOLYGONVIEWPORT_H
+#pragma once
 
 #include <QWidget>
 
@@ -14,4 +13,3 @@ signals:
 public slots:
 };
 
-#endif // CHECKPOLYGONVIEWPORT_H

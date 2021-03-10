@@ -1,5 +1,4 @@
-#ifndef CHECKPOLYGONSIDEBAR_H
-#define CHECKPOLYGONSIDEBAR_H
+#pragma once
 
 #include <QWidget>
 
@@ -14,5 +13,3 @@ signals:
 
 public slots:
 };
-
-#endif // CHECKPOLYGONSIDEBAR_H

@@ -1,5 +1,4 @@
-#ifndef CHECKPOLYGONWIDGET_H
-#define CHECKPOLYGONWIDGET_H
+#pragma once
 
 #include <QWidget>
 #include <QLabel>
@@ -21,5 +20,3 @@ private:
     EditPolygonWidget *mEditPoly = new EditPolygonWidget;
     QPushButton *mBtnClearEditPoly = new QPushButton("清除顶点");
 };
-
-#endif // CHECKPOLYGONWIDGET_H
