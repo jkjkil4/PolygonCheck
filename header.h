@@ -93,3 +93,10 @@ inline QVector<double> GetIntersections(const QVector<QPointF> &vecPoints, doubl
     return vecIntersections;
 #endif
 }
+
+template<typename Dis, typename Point>
+Dis PointDistancePow(const Point &pos1, const Point &pos2) {
+    Dis x = pos2.x() - pos1.x();
+    Dis y = pos2.y() - pos1.y();
+    return x * x + y * y;
+}

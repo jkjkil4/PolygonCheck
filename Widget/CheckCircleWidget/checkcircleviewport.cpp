@@ -158,15 +158,40 @@ void CheckCircleViewport::check() {
         if(circleRight >= qMin(prev.x(), cur.x()) && circleLeft <= qMax(prev.x(), cur.x())
                 && circleBottom >= qMin(prev.y(), cur.y()) && circleTop <= qMax(prev.y(), cur.y())) {
 
-            double disA = qSqrt(qPow(cur.x() - prev.x(), 2) + qPow(cur.y() - prev.y(), 2));     //prev和cur之间的距离
-            double disB = qSqrt(qPow(mCheckPos.x() - prev.x(), 2) + qPow(mCheckPos.y() - prev.y(), 2));     //圆心和prev之间的距离
-            double disC = qSqrt(qPow(mCheckPos.x() - cur.x(), 2) + qPow(mCheckPos.y() - cur.y(), 2));       //圆心和cur之间的距离
-            double p = (disA + disB + disC) / 2;    //某公式相关
-            double disVer = 2 * qSqrt(p * (p - disA) * (p - disB) * (p - disC)) / disA;     //垂直距离
-            double disMin = qMin(qMin(disB, disC), disVer);     //圆心相关的三个距离中的最短距离
-            if(disMin < mRad) {     //圆与线段有交点
-                mHasCollision = true;
-                return;
+            // 向量mCheckPos->prev 与 向量cur->prev 的 点积
+            double dotProductPrev = (prev.x() - mCheckPos.x()) * (prev.x() - cur.x()) + (prev.y() - mCheckPos.y()) * (prev.y() - cur.y());
+            if(dotProductPrev < 0) {   //该角为钝角
+                qDebug() << 114;
+                double disPrevPow = PointDistancePow<double, QPointF>(mCheckPos, prev);   //圆心和prev之间的距离的平方
+                if(disPrevPow < mRad * mRad) {
+                    mHasCollision = true;
+                    return;
+                }
+            }
+
+            // 向量mCheckPos->cur 与 向量prev->cur 的点积
+            double dotProductCur = (cur.x() - mCheckPos.x()) * (cur.x() - prev.x()) + (cur.y() - mCheckPos.y()) * (cur.y() - prev.y());
+            if(dotProductCur < 0) {     //该角为钝角
+                qDebug() << 514;
+                double disCurPow = PointDistancePow<double, QPointF>(mCheckPos, cur);     //圆心和cur之间的距离的平方
+                if(disCurPow < mRad * mRad) {
+                    mHasCollision = true;
+                    return;
+                }
+            }
+
+            if(dotProductPrev >= 0 && dotProductCur >= 0) {
+                // 计算垂直距离并判断是否相交
+                qDebug() << 1919;
+                double disBetween = qSqrt(qPow(cur.x() - prev.x(), 2) + qPow(cur.y() - prev.y(), 2));     //prev和cur之间的距离
+                double disPrev = qSqrt(qPow(mCheckPos.x() - prev.x(), 2) + qPow(mCheckPos.y() - prev.y(), 2));    //圆心和prev之间的距离
+                double disCur = qSqrt(qPow(mCheckPos.x() - cur.x(), 2) + qPow(mCheckPos.y() - cur.y(), 2));       //圆心和cur之间的距离
+                double p = (disBetween + disPrev + disCur) / 2;    //某公式相关
+                double disVer = 2 * qSqrt(p * (p - disBetween) * (p - disPrev) * (p - disCur)) / disBetween;     //垂直距离
+                if(disVer < qAbs(mRad)) {     //圆与线段有交点
+                    mHasCollision = true;
+                    return;
+                }
             }
         }
 
