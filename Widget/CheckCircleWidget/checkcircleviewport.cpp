@@ -73,6 +73,20 @@ void CheckCircleViewport::paintEvent(QPaintEvent *) {
     QPainter p(this);
     p.setRenderHint(QPainter::RenderHint::Antialiasing);
 
+    //绘制判断线
+    if(!mHasCollision && mVecIntersections.size() > 1) {
+        bool isIn = true;
+        double prev = mVecIntersections[0];
+        for(int i = 1; i < mVecIntersections.size(); i++) {
+            double cur = mVecIntersections[i];
+
+            p.fillRect(QRectF(prev + mOffset.x(), mCheckPos.y() + mOffset.y(), cur - prev, 2), isIn ? Qt::green : Qt::red);
+
+            isIn = !isIn;
+            prev = cur;
+        }
+    }
+
     if(!mVecPoints.isEmpty()) {
         //绘制多边形
         p.setPen(QPen(Qt::black, 2));
@@ -161,7 +175,6 @@ void CheckCircleViewport::check() {
             // 向量mCheckPos->prev 与 向量cur->prev 的 点积
             double dotProductPrev = (prev.x() - mCheckPos.x()) * (prev.x() - cur.x()) + (prev.y() - mCheckPos.y()) * (prev.y() - cur.y());
             if(dotProductPrev < 0) {   //该角为钝角
-                qDebug() << 114;
                 double disPrevPow = PointDistancePow<double, QPointF>(mCheckPos, prev);   //圆心和prev之间的距离的平方
                 if(disPrevPow < mRad * mRad) {
                     mHasCollision = true;
@@ -172,7 +185,6 @@ void CheckCircleViewport::check() {
             // 向量mCheckPos->cur 与 向量prev->cur 的点积
             double dotProductCur = (cur.x() - mCheckPos.x()) * (cur.x() - prev.x()) + (cur.y() - mCheckPos.y()) * (cur.y() - prev.y());
             if(dotProductCur < 0) {     //该角为钝角
-                qDebug() << 514;
                 double disCurPow = PointDistancePow<double, QPointF>(mCheckPos, cur);     //圆心和cur之间的距离的平方
                 if(disCurPow < mRad * mRad) {
                     mHasCollision = true;
@@ -182,7 +194,6 @@ void CheckCircleViewport::check() {
 
             if(dotProductPrev >= 0 && dotProductCur >= 0) {
                 // 计算垂直距离并判断是否相交
-                qDebug() << 1919;
                 double disBetween = qSqrt(qPow(cur.x() - prev.x(), 2) + qPow(cur.y() - prev.y(), 2));     //prev和cur之间的距离
                 double disPrev = qSqrt(qPow(mCheckPos.x() - prev.x(), 2) + qPow(mCheckPos.y() - prev.y(), 2));    //圆心和prev之间的距离
                 double disCur = qSqrt(qPow(mCheckPos.x() - cur.x(), 2) + qPow(mCheckPos.y() - cur.y(), 2));       //圆心和cur之间的距离
