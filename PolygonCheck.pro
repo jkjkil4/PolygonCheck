@@ -36,6 +36,10 @@ SOURCES += \
         Widget/CheckPointWidget/checkpointsidebar.cpp \
         Widget/CheckPointWidget/checkpointviewport.cpp \
         Widget/CheckPointWidget/checkpointwidget.cpp \
+        Widget/CheckPolygonWidget/checkpolygonsidebar.cpp \
+        Widget/CheckPolygonWidget/checkpolygonviewport.cpp \
+        Widget/CheckPolygonWidget/checkpolygonwidget.cpp \
+        Widget/CheckPolygonWidget/editpolygonwidget.cpp \
         Widget/digitedit.cpp \
         main.cpp \
         widget.cpp
@@ -50,6 +54,10 @@ HEADERS += \
         Widget/CheckPointWidget/checkpointsidebar.h \
         Widget/CheckPointWidget/checkpointviewport.h \
         Widget/CheckPointWidget/checkpointwidget.h \
+        Widget/CheckPolygonWidget/checkpolygonsidebar.h \
+        Widget/CheckPolygonWidget/checkpolygonviewport.h \
+        Widget/CheckPolygonWidget/checkpolygonwidget.h \
+        Widget/CheckPolygonWidget/editpolygonwidget.h \
         Widget/digitedit.h \
         header.h \
         widget.h

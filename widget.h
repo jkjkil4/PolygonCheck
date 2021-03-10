@@ -6,6 +6,7 @@
 #include "Widget/CheckPointWidget/checkpointwidget.h"
 #include "Widget/CheckLineWidget/checklinewidget.h"
 #include "Widget/CheckCircleWidget/checkcirclewidget.h"
+#include "Widget/CheckPolygonWidget/checkpolygonwidget.h"
 
 class Widget : public QWidget
 {
@@ -22,4 +23,5 @@ private:
     QPushButton *mBtnCheckPointWidget = new QPushButton("检测 点");
     QPushButton *mBtnCheckLineWidget = new QPushButton("检测 线");
     QPushButton *mBtnCheckCircleWidget = new QPushButton("检测 圆");
+    QPushButton *mBtnCheckPolygonWidget = new QPushButton("检测 多边形");
 };
