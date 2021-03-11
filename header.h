@@ -95,6 +95,16 @@ inline QVector<double> GetIntersections(const QVector<QPointF> &vecPoints, doubl
 #endif
 }
 
+inline bool IsContains(const QVector<double> &vecIntersections, double checkX) {
+    bool isInside = false;
+    for(double x : vecIntersections) {
+        if(x > checkX)
+            return isInside;
+        isInside = !isInside;
+    }
+    return false;
+}
+
 inline bool IsContains(const QVector<QPointF> &vecPoints, const QPointF &pos1, const QPointF &pos2) {
     if(vecPoints.size() < 2)
         return false;

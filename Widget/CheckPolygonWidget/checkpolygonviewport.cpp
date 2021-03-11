@@ -130,7 +130,38 @@ void CheckPolygonViewport::setPosByMouse(QPoint pos) {
 
 
 void CheckPolygonViewport::onCheck() {
+    mIsInside = true;
 
+    //如果为空，则判断不在内部
+    if(mPoly.isEmpty()) {
+        mIsInside = false;
+        return;
+    }
+
+    //如果只有一个顶点，则当成点来判断
+    if(mPoly.size() == 1) {
+        QPointF pos = mPoly[0] + mCheckPos;
+        if(!IsContains(GetIntersections(mVecPoints, pos.y()), pos.x()))
+            mIsInside = false;
+        return;
+    }
+
+    //如果只有两个顶点，则当成线来判断
+    if(mPoly.size() == 2) {
+        if(!IsContains(mVecPoints, mPoly[0] + mCheckPos, mPoly[1] + mCheckPos))
+            mIsInside = false;
+        return;
+    }
+
+    QPointF prevOffseted = *mPoly.rbegin() + mCheckPos;
+    for(const QPointF &cur : mPoly) {
+        QPointF curOffseted = cur + mCheckPos;
+        if(!IsContains(mVecPoints, prevOffseted, curOffseted)) {
+            mIsInside = false;
+            return;
+        }
+        prevOffseted = curOffseted;
+    }
 }
 
 void CheckPolygonViewport::onMouseStateChanged(MouseState ms) {
@@ -171,9 +202,11 @@ void CheckPolygonViewport::onVertexPosVisibleChanged(bool visible) {
 }
 void CheckPolygonViewport::onClearVertex() {
     mVecPoints.clear();
+    StartTimer(mTimerLimitCheck, 8);
     StartTimer(mTimerLimitUpdate, 10);
 }
 void CheckPolygonViewport::onPolygonChanged(const QVector<QPointF> &poly) {
     mPoly = poly;
+    StartTimer(mTimerLimitCheck, 8);
     StartTimer(mTimerLimitUpdate, 10);
 }
