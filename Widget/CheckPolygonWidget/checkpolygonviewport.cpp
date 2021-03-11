@@ -96,9 +96,11 @@ void CheckPolygonViewport::paintEvent(QPaintEvent *) {
     //绘制检测多边形
     if(!mPoly.isEmpty()) {
         p.setPen(QPen(mIsInside ? Qt::green : Qt::red, 2));
-        if(mPoly.size() == 1)
-            p.drawPoint(mPoly[0] + pos);
-        else {
+        if(mPoly.size() == 1) {
+            QPointF polyPos = mPoly[0] + mCheckPos + mOffset;
+            p.drawLine(polyPos + QPoint(-4, -4), polyPos + QPoint(4, 4));
+            p.drawLine(polyPos + QPoint(4, -4), polyPos + QPoint(-4, 4));
+        } else {
             QPointF prev = *mPoly.rbegin();
             for(const QPointF &cur : mPoly) {
                 p.drawLine(prev + pos, cur + pos);
