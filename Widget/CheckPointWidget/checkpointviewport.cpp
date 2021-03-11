@@ -1,6 +1,6 @@
 #include "checkpointviewport.h"
 
-CheckPointViewport::CheckPointViewport()
+CheckPointViewport::CheckPointViewport(QWidget *parent) : QWidget(parent)
 {
     setMouseTracking(true);
 
@@ -96,7 +96,7 @@ void CheckPointViewport::paintEvent(QPaintEvent *) {
         }
 
         //绘制顶点坐标
-        if(isVertexPosVisible) {
+        if(mIsVertexPosVisible) {
             p.setPen(Qt::black);
             for(QPointF &pos : mVecPoints) {
                 QString text = "(" + QString::number(pos.x()) + ", " + QString::number(pos.y()) + ")";
@@ -190,7 +190,7 @@ void CheckPointViewport::onYChanged(int y) {
 }
 
 void CheckPointViewport::onVertexPosVisibleChanged(bool visible) {
-    isVertexPosVisible = visible;
+    mIsVertexPosVisible = visible;
     StartTimer(mTimerLimitUpdate, 10);
 }
 

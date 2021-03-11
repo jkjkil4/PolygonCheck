@@ -20,7 +20,7 @@ protected:
     void closeEvent(QCloseEvent *) override;
 
 public:
-    explicit CheckPointViewport();
+    explicit CheckPointViewport(QWidget *parent = nullptr);
 
     void setPosByMouse(QPoint pos);
 
@@ -46,7 +46,7 @@ private:
     QPoint mCheckPos = QPoint(0, 0);
     QVector<double> mVecIntersections;
 
-    bool isVertexPosVisible = false;
+    bool mIsVertexPosVisible = false;
 
     QTimer *mTimerLimitUpdate = new QTimer(this);
 };

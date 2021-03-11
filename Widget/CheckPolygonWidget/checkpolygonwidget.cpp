@@ -2,6 +2,15 @@
 
 CheckPolygonWidget::CheckPolygonWidget(QWidget *parent) : QWidget(parent)
 {
+    connect(mSideBar, SIGNAL(mouseStateChanged(MouseState)), mViewport, SLOT(onMouseStateChanged(MouseState)));
+    connect(mSideBar, SIGNAL(xChanged(int)), mViewport, SLOT(onXChanged(int)));
+    connect(mSideBar, SIGNAL(yChanged(int)), mViewport, SLOT(onYChanged(int)));
+    connect(mViewport, SIGNAL(xChanged(int)), mSideBar, SLOT(onXChanged(int)));
+    connect(mViewport, SIGNAL(yChanged(int)), mSideBar, SLOT(onYChanged(int)));
+    connect(mSideBar, SIGNAL(vertexPosVisibleChanged(bool)), mViewport, SLOT(onVertexPosVisibleChanged(bool)));
+    connect(mSideBar, SIGNAL(clearVertex()), mViewport, SLOT(onClearVertex()));
+
+    connect(mEditPoly, SIGNAL(polygonChanged(const QVector<QPointF>&)), mViewport, SLOT(onPolygonChanged(const QVector<QPointF>&)));
     connect(mBtnClearEditPoly, SIGNAL(clicked()), mEditPoly, SLOT(onClearVertex()));
 
 
@@ -25,5 +34,5 @@ CheckPolygonWidget::CheckPolygonWidget(QWidget *parent) : QWidget(parent)
     layMain->addWidget(widgetEdit);
     setLayout(layMain);
 
-    resize(600, 420);
+    resize(800, 420);
 }

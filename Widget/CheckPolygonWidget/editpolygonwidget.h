@@ -25,7 +25,7 @@ public:
     QPoint trueOffset();
 
 signals:
-    void polygonChanged(const QVector<QPointF> &mVecVertex);
+    void polygonChanged(const QVector<QPointF> &poly);
 
 public slots:
     void onClearVertex();

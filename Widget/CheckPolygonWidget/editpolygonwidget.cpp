@@ -47,11 +47,8 @@ void EditPolygonWidget::leaveEvent(QEvent *) {
 
 void EditPolygonWidget::paintEvent(QPaintEvent *) {
     QPainter p(this);
+    p.setRenderHint(QPainter::Antialiasing);
     QPoint offset = trueOffset();
-
-    //绘制原点
-    p.fillRect(QRect(offset - QPoint(10, 0), QSize(21, 1)), Qt::magenta);
-    p.fillRect(QRect(offset - QPoint(0, 10), QSize(1, 21)), Qt::magenta);
 
     if(!mVecVertex.isEmpty()) {
         //绘制多边形
@@ -70,6 +67,10 @@ void EditPolygonWidget::paintEvent(QPaintEvent *) {
             p.drawLine(*mVecVertex.begin() + offset, *mVecVertex.rbegin() + offset);
         }
     }
+
+    //绘制原点
+    p.fillRect(QRect(offset - QPoint(10, 0), QSize(21, 1)), Qt::magenta);
+    p.fillRect(QRect(offset - QPoint(0, 10), QSize(1, 21)), Qt::magenta);
 }
 
 QPoint EditPolygonWidget::trueOffset() {
