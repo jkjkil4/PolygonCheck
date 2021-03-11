@@ -174,12 +174,13 @@ void CheckLineViewport::setPosByMouse(QPoint &rPoint, QPoint pos, CheckLineViewp
 
 void CheckLineViewport::getRotated() {
     mRotatedRadius = qAtan2(mCheckPos2.y() - mCheckPos1.y(), mCheckPos2.x() - mCheckPos1.x());
-    mCheckPos1Rotated = Rotate(mCheckPos1, -mRotatedRadius);
-    mCheckPos2Rotated = Rotate(mCheckPos2, -mRotatedRadius);
+    double sin = qSin(-mRotatedRadius), cos = qCos(-mRotatedRadius);
+    mCheckPos1Rotated = Rotate(mCheckPos1, sin, cos);
+    mCheckPos2Rotated = Rotate(mCheckPos2, sin, cos);
 
     mVecPointsRotated.clear();
     for(const QPointF &pos : mVecPoints)
-        mVecPointsRotated << Rotate(pos, -mRotatedRadius);
+        mVecPointsRotated << Rotate(pos, sin, cos);
 }
 
 bool CheckLineViewport::isCheckLineInside() {
