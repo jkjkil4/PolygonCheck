@@ -20,6 +20,10 @@ CheckPolygonWidget::CheckPolygonWidget(QWidget *parent) : QWidget(parent)
     QHBoxLayout *layMain = new QHBoxLayout;
     layMain->setMargin(0);
     layMain->setSpacing(0);
+    layMain->addWidget(mSideBar);
+    layMain->addWidget(mViewport);
     layMain->addWidget(widgetEdit);
     setLayout(layMain);
+
+    resize(600, 420);
 }
