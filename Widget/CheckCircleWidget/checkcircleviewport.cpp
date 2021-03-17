@@ -119,7 +119,7 @@ void CheckCircleViewport::paintEvent(QPaintEvent *) {
     QColor col = isCheckCircleInside() ? QColor(0, 190, 0) : QColor(190, 0, 0);
     p.setPen(col.darker());
     p.setBrush(col);
-    p.drawEllipse(mCheckPos, mRad, mRad);
+    p.drawEllipse(mCheckPos + mOffset, mRad, mRad);
 
     //绘制鼠标位置
     if(mMouseState == MouseState::AddPoint || mMouseState == MouseState::SetPos) {
